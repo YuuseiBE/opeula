@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operating Bot</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('background.jpg'); /* 背景画像のURLを指定 */
+    background-size: cover; /* 背景画像をカバーできるサイズに調整 */
+    background-position: center; /* 背景画像を中央に配置 */
+    background-repeat: no-repeat; /* 背景画像の繰り返しを無効化 */
+  }
+  .header {
+    background-color: #333; /* ヘッダーの背景色 */
+    color: #fff; /* ヘッダーのテキスト色 */
+    padding: 10px;
+    text-align: right;
+  }
+  .header a {
+    color: #fff; /* リンクの色 */
+    text-decoration: none; /* 下線を消す */
+    margin-left: 10px; /* ボタン間の余白 */
+    padding: 8px 12px; /* ボタンの内側の余白 */
+    border: 1px solid #fff; /* ボタンの枠線 */
+    border-radius: 4px; /* ボタンの角の丸み */
+  }
+  .header a:hover {
+    background-color: #555; /* ホバー時の背景色 */
+  }
+
+  .form-container {
+    max-width: 400px;
+    margin: 50px auto;
+    background: #f2f2f2;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none; /* 最初は非表示 */
+  }
+  .form-container h2 {
+    text-align: center;
+  }
+  .form-container input[type="text"],
+  .form-container input[type="password"],
+  .form-container input[type="email"],
+  .form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .form-container button,
+  .header button {
+    width: auto;
+    padding: 8px 12px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  .form-container button:hover,
+  .header button:hover {
+    background-color: #555;
+  }
+
+  /* Discordマークのスタイル */
+  .discord-mark {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 24px; /* Discordマークの幅 */
+    height: 24px; /* Discordマークの高さ */
+  }
+
+  /* 左上に表示するタイトルのスタイル */
+  .site-title {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+  <div class="site-title">Operating Bot</div>
+
+  <header class="header">
+    <a href="#">ログイン</a>
+    <a href="#">サインアップ</a>
+    <a href="#" id="email-link">メールを送信</a>
+    <button onclick="downloadDiscordInstaller()">Discordをダウンロード</button>
+  </header>
+  
+  <div class="form-container" id="login-form">
+    <h2>ログイン</h2>
+    <form>
+      <input type="text" placeholder="ユーザー名" required>
+      <input type="password" placeholder="パスワード" required>
+      <button type="submit">ログイン</button>
+    </form>
+  </div>
+
+  <div class="form-container" id="signup-form">
+    <h2>サインアップ</h2>
+    <form>
+      <input type="text" placeholder="ユーザー名" required>
+      <input type="password" placeholder="パスワード" required>
+      <button type="submit">サインアップ</button>
+    </form>
+  </div>
+
+  <div class="form-container" id="email-form" style="display: none;">
+    <h2>メールを送信する</h2>
+    <form id="email-send-form">
+      <input type="text" placeholder="お名前" id="name" required>
+      <input type="email" placeholder="メールアドレス" id="email" required>
+      <textarea placeholder="メッセージ内容" id="message" rows="5" required></textarea>
+      <button type="submit">送信</button>
+    </form>
+  </div>
+
+  <div style="text-align: center; margin-top: 50px;">
+    <h2>Operating Botの利用規約とプライバシーポリシー</h2>
+    <p>このBotを追加することで、以下の利用規約およびプライバシーポリシーに同意したものとみなします。</p>
+
+    <h3>利用規約</h3>
+    <p>この利用規約（以下「本規約」という。）は、Operating Bot（以下「ボット」という。）の利用に関する条件を定めるものです。ボットを利用される全ての方（以下「利用者」という。）は、本規約の内容に同意の上でボットをご利用ください。</p>
+
+    <h4>1. ボットの目的</h4>
+    <p>ボットはみんなが使える便利機能を提供することを目的とします。利用者は、本規約に基づき合法的な範囲でのみボットを利用するものとします。</p>
+
+    <h4>2. 禁止事項</h4>
+    <ul>
+      <li>スパム行為、ハラスメント、その他の不快な行為</li>
+      <li>法律または規制に違反する行為</li>
+      <li>他者の知的財産権を侵害する行為</li>
+    </ul>
+
+    <h4>3. 免責事項</h4>
+    <p>ボットの利用に関連して生じた問題やトラブルについて、開発者は一切の責任を負いません。利用者は自己の責任においてボットを利用するものとし、損害賠償の請求を行わないものとします。</p>
+
+    <h4>4. サービスの変更と停止</h4>
+    <p>開発者は、以下の場合にボットの内容を変更または停止する権利を留保します：</p>
+    <ul>
+      <li>技術的な問題や改善のための計画的な停止</li>
+      <li>法的な要求や司法命令による停止</li>
+      <li>その他予期せぬ事態による停止</li>
+    </ul>
+    <p>開発者は、ボットの停止に関する重要な情報を、適切な手段で利用者に通知する努力をしますが、通知なく停止される可能性もあります。停止により利用者に生じた損害について、開発者は一切の責任を負いません。</p>
+
+    <h4>5. 知的財産権</h4>
+    <p>ボットおよび関連する資料に関する知的財産権は、開発者に帰属します。利用者は、開発者の許可なくこれを複製、改変、販売することはできません。</p>
+
+    <h4>6. プライバシーポリシー</h4>
+    <p>利用者の個人情報の取り扱いについては、別途プライバシーポリシーが適用されます。利用者は、本ポリシーに同意の上でボットを利用するものとします。</p>
+
+    <h4>7. 準拠法と管轄裁判所</h4>
+    <p>本規約は、日本法に準拠し解釈されるものとし、利用者と開発者間の紛争については、東京地方裁判所を専属的合意管轄裁判所とします。</p>
+
+    <h3>プライバシーポリシー</h3>
+    <p>このプライバシーポリシー（以下「本ポリシー」という。）は、Operating Bot（以下「ボット」という。）の利用において、利用者の個人情報の取り扱いに関する条件を定めるものです。本ポリシーは、ボットの利用者（以下「利用者」という。）に適用されます。利用者は、本ポリシーの内容に同意の上でボットをご利用ください。</p>
+
+    <h4>1. 取得する情報</h4>
+    <p>ボットは以下の情報を取得する場合があります：</p>
+    <ul>
+      <li>利用者のDiscordユーザーIDおよびニックネーム</li>
+      <li>ボットの機能を利用する際に生成されるデータ（例: コマンドの履歴）</li>
+      <li>技術的な情報（IPアドレス、ブラウザの種類など）</li>
+    </ul>
+
+    <h4>2. 情報の利用目的</h4>
+    <p>ボットは以下の目的で利用者の情報を利用します：</p>
+    <ul>
+      <li>サービスの提供および運営</li>
+      <li>利用者とのコミュニケーションの確立</li>
+      <li>サービス改善および新機能の開発</li>
+      <li>法的な要件の履行</li>
+    </ul>
+
+    <h4>3. 情報の共有と開示</h4>
+    <p>ボットは、以下の場合を除き、利用者の個人情報を第三者に開示または提供しません：</p>
+    <ul>
+      <li>利用者の同意がある場合</li>
+      <li>法的要求がある場合（例: 法的手続き、司法命令）</li>
+    </ul>
+
+    <h4>4. データの保護と保存</h4>
+    <p>ボットは、適切なセキュリティ対策を実施し、利用者の情報を保護します。また、法的要件に準拠して情報を保存しますが、保存期間を超えて個人情報を保管することはありません。</p>
+
+    <h4>5. ユーザーの権利</h4>
+    <p>利用者は、自身の個人情報に関する以下の権利を行使することができます：</p>
+    <ul>
+      <li>情報へのアクセス</li>
+      <li>情報の訂正および削除</li>
+      <li>情報の処理の制限</li>
+      <li>データの移行</li>
+      <li>同意の取り消し</li>
+    </ul>
+
+    <h4>6. ポリシーの変更</h4>
+    <p>本ポリシーは、必要に応じて変更されることがあります。変更後のポリシーはボットのウェブサイトまたは適切な手段で通知されます。</p>
+
+    <h4>7. お問い合わせ</h4>
+    <p>本ポリシーに関するご質問やお問い合わせがある場合は、以下の連絡先までお問い合わせください。</p>
+    <p>詳細については、<a href="https://discord.gg/aRHbh9tBRr" target="_blank">サポートサーバー</a>での問い合わせをお願いします。</p>
+  </div>
+
+  <script>
+    // ログイン・サインアップの切り替え
+    document.querySelector('.header a:nth-child(1)').addEventListener('click', function() {
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('signup-form').style.display = 'none';
+      document.getElementById('email-form').style.display = 'none';
+    });
+    document.querySelector('.header a:nth-child(2)').addEventListener('click', function() {
+      document.getElementById('signup-form').style.display = 'block';
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('email-form').style.display = 'none';
+    });
+
+    // メールフォームの表示切り替え
+    document.getElementById('email-link').addEventListener('click', function(event) {
+      event.preventDefault();
+      document.getElementById('email-form').style.display = 'block';
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('signup-form').style.display = 'none';
+    });
+
+    // Discordのインストーラーをダウンロード
+    function downloadDiscordInstaller() {
+      window.open("https://discord.com/api/download?platform=win", "_blank");
+    }
+
+    // メール送信成功時のアラート
+    document.getElementById('email-send-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      // この部分に実際のメール送信処理を追加する必要があります（サーバーサイドで行います）。
+      alert('メールを送信しました！');
+    });
+  </script>
+</body>
+</html>
